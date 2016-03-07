@@ -28,7 +28,7 @@ You want your client to make a request to the server, but if it fails you want t
 module Zappos
   module Client
     class Shoe
-      self.site = "http://zappos.com"/api"
+      self.site = "http://zappos.com/api"
     end
   end
 end
