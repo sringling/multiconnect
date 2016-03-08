@@ -2,8 +2,8 @@ module Multiconnect
   module Connection
     class Base
 
-      def initialize(client)
-        @client = client
+      def initialize(options)
+        @client = options.delete :client
       end
 
       def client

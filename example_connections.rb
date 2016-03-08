@@ -14,6 +14,10 @@ module JsonApiResource
   module Connection
     class ServerConnection < Multiconnect::Connection::Base
       
+      def report_error(e)
+        Honeybadger.notify(e)
+      end
+
       def request(action, *args)
         client.send action, *args
 
@@ -35,6 +39,10 @@ end
 module JsonApiResource
   module Connection
     class CacheFallbackConnection < Multiconnect::Connection::Base
+
+      def report_error(e)
+      end
+
       def request(action, *args)
         key = sorted_args(args)
         Rails.cache.fetch key
@@ -47,6 +55,12 @@ end
 module JsonApiResource
   module Connection
     class CacheFirstToCircuitBreakerServerConnection < CircuitBreakerServerConnection
+
+      def report_error(e)
+        Honeybadger.notify(e)
+        InfluxDB.notify(e)
+      end
+
       def request(action, *args)
         key = key_from_args(args)
         Rails.cache.fetch key do
@@ -66,6 +80,12 @@ end
 module JsonApiResource
   module Connection
     class CircuitBreakerServerConnection < Multiconnect::Connection::Base
+
+      def report_error(e)
+        Honeybadger.notify(e)
+        InfluxDB.notify(e)
+      end
+
       def request(action, *args)
         if ready_for_request?
           client.send(action, *args)
