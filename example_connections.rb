@@ -2,11 +2,11 @@
 
 # crude implementation without resource helpers
 class Object << JsonApiResource::Resource
-  add_connection :cache_first, client: client_class # no autmatic fallthrough to the server IN the connection. No client_class because it'll use Rails.cache
+  add_connection CacheFirstToCircuitBreakerServerConnection, client: client_class # no autmatic fallthrough to the server IN the connection. No client_class because it'll use Rails.cache
                                   # Solicitor::Client::Lawyer
-  add_connection :server, client: client_class, class: CircuitBreakerServerConnection
-  add_connection :cache_fallback # no use trying to hit the client now. We laready know the server is unresponsive
-  add_connection :default_values, client: self
+  add_connection CircuitBreakerServerConnection, client: client_class
+  add_connection CacheFallbackConnection # no use trying to hit the client now. We laready know the server is unresponsive
+  add_connection DefaultValueConnection, client: self
 end
 
 
@@ -21,7 +21,7 @@ module JsonApiResource
       def request(action, *args)
         client.send action, *args
 
-      catch JsonApiClient::Errors::NotFound => e
+      rescue JsonApiClient::Errors::NotFound => e
         result = JsonApiClient::ResultSet.new
 
         result.meta = {status: status}
@@ -88,12 +88,12 @@ module JsonApiResource
 
       def request(action, *args)
         if ready_for_request?
-          client.send(action, *args)
+          client.send :find, args
         else
           raise "fall through!"
         end
 
-      catch JsonApiClient::Errors::NotFound => e
+      rescue JsonApiClient::Errors::NotFound => e
         result = JsonApiClient::ResultSet.new
 
         result.meta = {status: status}
@@ -102,7 +102,7 @@ module JsonApiResource
         result.errors.add( "FileNotFound", e.message )
 
         result
-      catch => e
+      rescue => e
         @responding = false
         # default circuit broken for 30 seconds. This should probably be 1 - 2 - 5 - 15 - 30 - 1 min - 2 min*
         @timeout = 30.seconds.from.
@@ -118,4 +118,70 @@ module JsonApiResource
       end
     end
   end
+end
+
+
+class Shoe
+  self.client_class = Faraday
+
+  include Multiconnect::Connectable
+
+  # block of connections
+
+  # try to hit the server directly. If the server fails, disallow calls for 30 seconds
+  add_connection :server, client: Solicitor::Client::Lawyer, class: CircuitBreakerServerConnection
+
+  # If the server call failed, try to fetch the value from cache. This assumes you cache that somewhere
+  add_connection :cache_fallback
+
+
+  # whatever your client calling code is
+  def self.where(opts)
+    request opts do
+      client.where
+  end
+
+  def self.find(opts)
+    request(:find, opts).data
+  end
+end
+
+
+Shoe.request(key: 'asdf') do |connection_client|
+  connection_client.where(foo: 'bar').first
+end
+
+
+class Lawyer < JsonApiResource::Resource
+  wraps Solicitor::Client::Lawyer
+
+  self.legal_zoom_client = LZ::Client::Lawyer
+
+  add_connection :avvo_api, client: Faraday
+  add_connection :legal_zoom, client: legal_zoom_client
+
+  def self.find(*args)
+    request = request( :find, args )
+    connection_status = request.connection
+    request.data
+  end
+
+end
+
+# controler
+
+def show
+  @lawyer = Lawyer.find(params[:id])
+  render_500 if @lawyer.using_fallback(:cache_fallback)?
+end
+
+def search
+  @lawyers = Lawyer.search(params)
+  
+  @lawyers.using_fallback(:cache_fallback)?
+
+end
+
+def index
+  @lawyers = Lawyer.where(params[:whatever], per_page: 4, order: :created_at)
 end

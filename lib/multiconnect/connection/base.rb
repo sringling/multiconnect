@@ -3,7 +3,8 @@ module Multiconnect
     class Base
 
       def initialize(options)
-        @client = options.delete :client
+        @client = options.fetch :client, nil
+        @except = options.fetch :except, []
       end
 
       def client
@@ -19,8 +20,11 @@ module Multiconnect
       end
 
       def execute(action, *args)
-
-        Result.new status: Result::SUCCESS, data: request(action, *args)
+        if @except.include? action
+          Result.new 
+        else
+          Result.new status: Result::SUCCESS, data: request(action, *args), connection: self.class
+        end
 
       rescue => e
         report_error(e)

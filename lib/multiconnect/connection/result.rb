@@ -3,19 +3,27 @@ module Multiconnect
     class Result
       SUCCESS = :success
       FAILURE = :failure
-      attr_accessor :status, :data
-
+      
       def initialize(opts)
-        self.status = opts.fetch :status, FAILURE
-        self.status = opts.fetch :data, nil
+        @status = opts.fetch :status, FAILURE
+        @data = opts.fetch :data, nil
+        @connection = opts.fetch :connection
       end
 
       def successful?
-        status == SUCCESS
+        @status == SUCCESS
       end
 
       def failure?
-        status == FAILURE
+        @status == FAILURE
+      end
+
+      def using_fallback?(connection)
+        @connection == connection
+      end
+
+      def method_missing(method, *args, &block)
+        @data.send method, *args, &block
       end
     end
   end

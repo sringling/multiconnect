@@ -6,20 +6,18 @@ module Multiconnect
       class << self
         class_attribute :_connections
         
-        def add_connection(connection, options = {})
-          connection_class = options.fetch :class, "#{connection.to_s}_connection".camelize.constatnize
-          connection_client_class = options.delete :client, nil
-
+        def add_connection(connection_class, options = {})
+          
           self._connections = _connections + [connection_class.new(options)]
-        rescue NameError => e
-          raise "#{e.message}. Cannot find the connection class. Pass in the :class option if you have a weird path"
+
         end
 
-        def request(acrion, *args)
+        def request(action, *args)
           connections.each do |connection|
             result = connection.execute(action, *args)
-            return result.data if result.successful?
+            return result if result.successful?
           end
+          raise "all connections failed"
         end
       end
     end
