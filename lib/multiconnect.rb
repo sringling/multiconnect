@@ -1,6 +1,9 @@
 require "multiconnect/version"
+require 'active_support'
+require 'active_support/concern'
+require 'active_support/core_ext/class/attribute'
 
 module Multiconnect
-  autoload :Connections,    'multiconnect/connections'
+  autoload :Connection,     'multiconnect/connection'
   autoload :Connectable,    'multiconnect/connectable'
 end

@@ -5,6 +5,7 @@ module Multiconnect
     included do
       class << self
         class_attribute :_connections
+        self._connections = []
         
         def add_connection(connection_class, options = {})
           
@@ -13,11 +14,11 @@ module Multiconnect
         end
 
         def request(action, *args)
-          connections.each do |connection|
+          self._connections.each do |connection|
             result = connection.execute(action, *args)
-            return result if result.successful?
+            return result if result.success?
           end
-          raise "all connections failed"
+          raise "Multiconnect Error: #{self} has failed to request #{action}"
         end
       end
     end

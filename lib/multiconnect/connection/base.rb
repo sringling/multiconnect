@@ -2,13 +2,11 @@ module Multiconnect
   module Connection
     class Base
 
-      def initialize(options)
-        @client = options.fetch :client, nil
-        @except = options.fetch :except, []
-      end
+      attr_accessor :client
 
-      def client
-        @client
+      def initialize(options = {})
+        self.client = options.fetch :client, nil
+        @except = Array(options.fetch :except, [])
       end
 
       def request(action, *args)

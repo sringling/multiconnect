@@ -4,18 +4,14 @@ module Multiconnect
       SUCCESS = :success
       FAILURE = :failure
       
-      def initialize(opts)
+      def initialize(opts = {})
         @status = opts.fetch :status, FAILURE
         @data = opts.fetch :data, nil
-        @connection = opts.fetch :connection
+        @connection = opts.fetch :connection, nil
       end
 
-      def successful?
+      def success?
         @status == SUCCESS
-      end
-
-      def failure?
-        @status == FAILURE
       end
 
       def using_fallback?(connection)
