@@ -19,4 +19,8 @@ class ResultTest < Minitest::Test
   def test_result_delegates_method_missing_to_the_data
     assert_equal 2, Multiconnect::Connection::Result.new(data: [1, 2, 3])[1]
   end
+
+  def test_result_responds_to_data
+    assert_equal [1, 2, 3], Multiconnect::Connection::Result.new(data: [1, 2, 3]).data
+  end
 end

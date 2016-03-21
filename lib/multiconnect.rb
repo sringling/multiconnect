@@ -6,4 +6,5 @@ require 'active_support/core_ext/class/attribute'
 module Multiconnect
   autoload :Connection,     'multiconnect/connection'
   autoload :Connectable,    'multiconnect/connectable'
+  autoload :Error,          'multiconnect/error'
 end
