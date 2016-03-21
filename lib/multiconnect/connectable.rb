@@ -8,9 +8,11 @@ module Multiconnect
         self._connections = []
         
         def add_connection(connection_class, options = {})
-          
           self._connections = _connections + [connection_class.new(options)]
+        end
 
+        def prepend_connection(connection_class, options = {})
+          self._connections = [connection_class.new(options)] + _connections
         end
 
         def request(action, *args)

@@ -1,12 +1,28 @@
 require 'minitest_helper'
 
 class ConnectableTest < Minitest::Test
+  def setup
+    User._connections = []
+    User.add_connection PrimaryConnection, client: User.client_class, except: :create
+    User.add_connection SecondaryConnection, client: User.client_class, except: [:where, :search]
+  end
+
   def test_can_add_connections
     assert_equal 2, User._connections.count
     
     User.add_connection TertiaryConnection
 
     assert_equal 3, User._connections.count
+  end
+
+  def test_can_prepend_connections
+    assert_equal 2, User._connections.count
+    
+    User.prepend_connection TertiaryConnection
+
+    assert_equal 3, User._connections.count
+
+    assert_equal TertiaryConnection, User._connections.first.class
   end
 
   def test_request_fires_connections
