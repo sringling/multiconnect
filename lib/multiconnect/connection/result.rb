@@ -14,6 +14,10 @@ module Multiconnect
         @status == SUCCESS
       end
 
+      def data
+        @data
+      end
+
       def using_fallback?(connection)
         @connection == connection
       end
