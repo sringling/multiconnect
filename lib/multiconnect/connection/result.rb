@@ -1,13 +1,17 @@
 module Multiconnect
   module Connection
     class Result
+      instance_methods.each do |m|
+        undef_method(m) if m.to_s !~ /(?:^__|^nil?$|^send$|^object_id$|^success?$|^data$|^using_fallback?$)/
+      end
+
       SUCCESS = :success
       FAILURE = :failure
-      
+
       def initialize(opts = {})
-        @status = opts.fetch :status, FAILURE
-        @data = opts.fetch :data, nil
+        @status     = opts.fetch :status, FAILURE
         @connection = opts.fetch :connection, nil
+        @data       = opts.fetch :data, nil
       end
 
       def success?

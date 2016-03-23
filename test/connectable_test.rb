@@ -28,7 +28,8 @@ class ConnectableTest < Minitest::Test
   def test_request_fires_connections
     result = User.find(6)
     assert result
-    assert_equal Multiconnect::Connection::Result, result.class
+    assert result.success?
+    assert_equal Array, result.class
   end
 
   def test_request_returns_first_successful_call
