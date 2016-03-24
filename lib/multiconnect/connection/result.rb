@@ -2,7 +2,7 @@ module Multiconnect
   module Connection
     class Result
       instance_methods.each do |m|
-        undef_method(m) if m.to_s !~ /(?:^__|^nil?$|^send$|^object_id$|^success?$|^data$|^using_fallback?$)/
+        undef_method(m)
       end
 
       SUCCESS = :success
