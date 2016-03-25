@@ -1,5 +1,5 @@
 module Multiconnect
   module Error
-    autoload :UnsuccessfulRequestError, 'multiconnect/error/unsuccessful_request_error'
+    autoload :UnsuccessfulRequest, 'multiconnect/error/unsuccessful_request'
   end
 end

@@ -44,7 +44,7 @@ class ConnectableTest < Minitest::Test
   end
 
   def test_failed_connections_raise
-    assert_raises Multiconnect::Error::UnsuccessfulRequestError do
+    assert_raises Multiconnect::Error::UnsuccessfulRequest do
       SadClass.explode(nil)
     end
   end

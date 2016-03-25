@@ -24,6 +24,7 @@ class SecondaryConnection < Multiconnect::Connection::Base
   def report_error(e)
     $errors ||=[]
     $errors << e.class
+    puts e
   end
 
   def request(action, *args)

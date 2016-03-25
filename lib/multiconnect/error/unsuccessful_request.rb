@@ -1,6 +1,6 @@
 module Multiconnect
   module Error
-    class UnsuccessfulRequestError < StandardError
+    class UnsuccessfulRequest < StandardError
       def initialize(opts = {})
         @class    = opts.fetch :class, nil
         @action   = opts.fetch :action, nil

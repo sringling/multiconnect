@@ -21,6 +21,16 @@ class ConnectionTest < Minitest::Test
     refute SecondaryConnection.new(except: [:find]).execute(:find, 6).success?
   end
 
+  def test_connections_filter_non_only_requests
+    assert SecondaryConnection.new.execute(:find, 6).success?
+    assert SecondaryConnection.new(only: :find).execute(:find, 6).success?
+    refute SecondaryConnection.new(only: :where).execute(:find, 6).success?
+    assert SecondaryConnection.new(only: [:find]).execute(:find, 6).success?
+    refute SecondaryConnection.new(only: [:where]).execute(:find, 6).success?
+
+    refute SecondaryConnection.new(only: [:find], except: :find).execute(:find, 6).success?
+  end
+
   def test_connection_responds_to_client
     assert_equal DummyObject, PrimaryConnection.new(client: DummyObject).client
   end
