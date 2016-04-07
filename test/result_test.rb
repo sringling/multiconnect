@@ -23,13 +23,4 @@ class ResultTest < Minitest::Test
   def test_result_responds_to_data
     assert_equal [1, 2, 3], Multiconnect::Connection::Result.new(data: [1, 2, 3]).data
   end
-
-  def test_result_delegates_everything_but_its_methods_to_data
-    result = Multiconnect::Connection::Result.new(data: [1, 2, 3], status: :success, connection: PrimaryConnection)
-    assert result.using_fallback?(PrimaryConnection), "result should respond to `using_fallback`?"
-    assert result.success?, "result should respond to `success`?"
-    assert result.data, "result should respond to `data`"
-    assert_equal Array, result.class
-    assert_equal result, result.data
-  end
 end

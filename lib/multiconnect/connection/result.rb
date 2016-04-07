@@ -1,10 +1,6 @@
 module Multiconnect
   module Connection
     class Result
-      instance_methods.each do |m|
-        undef_method(m)
-      end
-
       SUCCESS = :success
       FAILURE = :failure
 
