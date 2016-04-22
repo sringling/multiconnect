@@ -164,7 +164,7 @@ And now you can add as many connections as you want, and your `find` and `search
 
 ### Result object
 
-Every connection returns a `Multiconnect::Conneciton::Result` obejct. It responds to `data`, `success?`, and `using_fallback?(connection)`. Method missing delegates just about everything else to the data object.
+Every connection returns a `Multiconnect::Connection::Result` obejct. It responds to `data`, `success?`, and `using_fallback?(connection)`. Method missing delegates just about everything else to the data object.
 
 * `data` is the data returned from the call. a failed call will have `nil` as data
 * `success?` will return whether the connection attempt succeeded
