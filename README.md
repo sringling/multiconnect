@@ -1,6 +1,6 @@
 # Multiconnect
 
-Multiconnect is a way to manage your server conenction fallbacks.
+Multiconnect is a way to manage your server connection fallbacks.
 
 ## Installation
 
