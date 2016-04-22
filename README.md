@@ -182,7 +182,7 @@ Adds a connecion to the list that `request` loops through.
 
 Prepends a connection to the front of the list. Useful if you have a generalized class that defines a set of connections and you want an inheriting model to hit a different connection first. e.g. try cache first strategy.
 
-## Conneciton methods
+## Connection methods
 
 ### request( action, *args )
 
