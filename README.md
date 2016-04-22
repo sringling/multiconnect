@@ -198,7 +198,7 @@ Whenever a connection encounters and error, it sends it here.
 
 Normally the url structure would be more complex and there would be a client class that would handle the URL building and the actual call. 
 
-For example, if you are wrapping a [JsonApiClient](https://www.github.com/chingor13/json_api_client), you would pass in the object that handles that particular object, like
+For example, if you are wrapping a [JsonApiClient](https://github.com/chingor13/json_api_client), you would pass in the object that handles that particular object, like
 
 ```ruby
 class Shoe
@@ -256,6 +256,8 @@ class ServerConnection < Multiconnect::Connection::Base
   end
 end
 ```
+
+For example usage of the exact scenario above, you can look at [JsonApiResource](https://github.com/avvo/json_api_resource) for a base client wrapper, and [JsonApiResourceConnections](https://github.com/avvo/json_api_resource_connections) for circuitbreaker and cache connections.
 
 ## Development
 
