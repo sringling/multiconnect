@@ -87,7 +87,7 @@ And that probably works, ok, but now you have to replicate that code in every mo
 
 Multiconnect handles the rescuing and looping through connections for you. Here's what the code above would look like with Multiconnect
 
-Your 2 connections here would be the conneciton that talks to the server, and the one that does the cache fallback
+Your 2 connections here would be the connection that talks to the server, and the one that does the cache fallback
 
 ```ruby
 class ServerConnection < Multiconnect::Connection::Base
@@ -128,7 +128,7 @@ Now that we have the connections all set up, `Shoe` will look more like this:
 class Shoe
   include Multiconnect::Connectable
 
-  add_conneciton ServerConnection
+  add_connection ServerConnection
   add_connection CacheConnection
 
   class << self
@@ -158,7 +158,7 @@ class Shoe
 end
 ```
 
-And now you can add as many connecitons as you want, and your `find` and `search` methods will change none. 
+And now you can add as many connections as you want, and your `find` and `search` methods will change none. 
 
 ## Objects and helpers
 
@@ -168,17 +168,17 @@ Every connection returns a `Multiconnect::Conneciton::Result` obejct. It respond
 
 * `data` is the data returned from the call. a failed call will have `nil` as data
 * `success?` will return whether the connection attempt succeeded
-* `using_fallback?` takes a conneciton class, and returns whether it is the successful connection.
+* `using_fallback?` takes a connection class, and returns whether it is the successful connection.
 
 ### request( action, *args )
 
-Handles looping through the connecitons and returns the `Result` of the first one that succeeds.
+Handles looping through the connections and returns the `Result` of the first one that succeeds.
 
-### add_connection( conneciton, options = {} )
+### add_connection( connection, options = {} )
 
 Adds a connecion to the list that `request` loops through.
 
-### prepend_connection( conneciton, options = {} )
+### prepend_connection( connection, options = {} )
 
 Prepends a connection to the front of the list. Useful if you have a generalized class that defines a set of connections and you want an inheriting model to hit a different connection first. e.g. try cache first strategy.
 
