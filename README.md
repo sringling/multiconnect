@@ -257,7 +257,7 @@ class ServerConnection < Multiconnect::Connection::Base
 end
 ```
 
-For example usage of the exact scenario above, you can look at [JsonApiResource](https://github.com/avvo/json_api_resource) for a base client wrapper, and [JsonApiResourceConnections](https://github.com/avvo/json_api_resource_connections) for circuitbreaker and cache connections.
+For example usage of the exact scenario above, you can look at [JsonApiResource](https://github.com/avvo/json_api_resource) for a base client wrapper with a single connection, and [JsonApiResourceConnections](https://github.com/avvo/json_api_resource_connections) for circuitbreaker and cache connections.
 
 ## Development
 
