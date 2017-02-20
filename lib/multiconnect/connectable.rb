@@ -16,12 +16,18 @@ module Multiconnect
         end
 
         def request(action, *args)
+          errors = []
+
           self._connections.each do |connection|
-            result = connection.execute(action, *args)
-            return result if result.success?
+            begin
+              result = connection.execute(action, *args)
+              return result if result.success?
+            rescue => e
+              errors << e
+            end
           end
 
-          raise Multiconnect::Error::UnsuccessfulRequest.new( class: self, action: action )
+          raise Multiconnect::Error::UnsuccessfulRequest.new( class: self, action: action, errors: errors )
         end
       end
     end

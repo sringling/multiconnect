@@ -27,7 +27,7 @@ module Multiconnect
 
       rescue => e
         report_error(e)
-        Result.new
+        raise e
       end
 
       private
